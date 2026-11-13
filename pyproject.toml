@@ -36,7 +36,7 @@ dev = [
     "pytest-asyncio>=0.24.0",
     "pytest-cov>=6.0.0",
     "ruff==0.15.14",
-    "ty==0.0.39",
+    "ty==0.0.100",
 ]
 
 [tool.uv]
@@ -73,7 +73,7 @@ dev = [
     "ruff==0.15.14",
     "detect-secrets",
     "pip-audit>=2.10.0",
-    "ty==0.0.39",
+    "ty==0.0.100",
     # PYSEC-2026-3721: pip 26.1.2 is vulnerable (transitive via pip-audit -> pip-api -> pip); explicit floor so a re-lock cannot regress
     "pip>=26.2",
 ]
