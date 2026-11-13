@@ -1,5 +1,9 @@
 # coding-repo-jobs
 
+[![CI](https://github.com/nonagenticai/coding-repo-jobs/actions/workflows/ci.yml/badge.svg)](https://github.com/nonagenticai/coding-repo-jobs/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/nonagenticai/coding-repo-jobs)](https://github.com/nonagenticai/coding-repo-jobs/releases)
+[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+
 L2 **bulk dependency-upgrade spine**: a durable `repo_jobs` queue + a stateless
 worker that drives the *already-proven* `coding-containers` / `coding-security`
 direct-push PR path (the `coding-github` #27/#29 routing) — **bypassing
@@ -63,3 +67,19 @@ docker rm -f "$cid"
 ```
 
 Port: **8695**. Stack: FastAPI · SQLAlchemy async · psycopg v3 · alembic · uv.
+
+## Security
+
+Report vulnerabilities privately through the repository's Security tab — see
+[`SECURITY.md`](SECURITY.md). Do not open a public issue for a security problem.
+
+## Contributing
+
+Issues and pull requests are welcome. See
+[`CONTRIBUTING.md`](https://github.com/nonagenticai/.github/blob/main/CONTRIBUTING.md) for the
+organisation-wide rules; setup, test and lint commands are in this README. Commits carry DCO
+sign-off.
+
+## License
+
+Apache-2.0 — see [`LICENSE`](LICENSE) and [`NOTICE`](NOTICE).
