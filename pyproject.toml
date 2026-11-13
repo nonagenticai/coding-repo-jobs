@@ -1,0 +1,115 @@
+[project]
+name = "coding-repo-jobs"
+version = "0.1.0"
+license = { text = "Apache-2.0" }
+description = "L2 bulk dependency-upgrade spine: durable repo_jobs queue + stateless worker that drives the proven coding-containers/coding-security direct-push PR path, bypassing Planka."
+authors = [{name = "Nonagentic", email = "dev@nonagentic.ai"}]
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.35.0",
+    "pydantic>=2.12.5",
+    "pydantic-settings>=2.14.2",  # GHSA-4xgf-cpjx-pc3j fixed in 2.14.2
+    "httpx>=0.28.0",
+    "sqlalchemy[asyncio]>=2.0",
+    "psycopg[binary,pool]>=3.2.0",
+    # Database migrations (K8s initContainer)
+    "alembic>=1.13.0",
+    # Tenant-isolation auth (AuthMiddleware + require_tenant). >=1.5.7 pulls
+    # pydantic-ai>=1.99 which clears CVE-2026-46678.
+    # >=1.11.0: auth.outbound gained `service_token=`, the on-behalf-of vouching
+    # arm — the CALLER half of the same hardening. 1.10.1 let this service SURVIVE
+    # TRUST_TENANT_HEADER=false on its inbound edge (AuthMiddleware introspects
+    # the licence Bearer); without 1.11.0 its own outbound calls still assert a
+    # tenant with nothing but a bare header, so the worker 401s the moment the
+    # three backends it drives harden the same way.
+    # >=1.19.0: adds coding_client.clients.CodingWorkspacesClient, the typed
+    # client the orchestrator now uses for every /api/workspaces call. 1.16.0
+    # (what was pinned here, and what is currently in .venv) does NOT export it
+    # — the import fails outright — so this floor is load-bearing, not hygiene.
+    "coding-client>=1.19.5",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=9.0.2",
+    "pytest-asyncio>=0.24.0",
+    "pytest-cov>=6.0.0",
+    "ruff==0.15.14",
+    "ty==0.0.39",
+]
+
+[tool.uv]
+# Security constraints for transitive packages this service never imports directly,
+# kept at/above the patched release via a uv constraint (not a direct dependency):
+#  - pyasn1 0.6.3 (via google-auth -> pyasn1-modules): PYSEC-2026-3455/3456/3457, fix 0.6.4
+#  - aiohttp 3.14.1: CVE-2026-59881 / -69243 / -69244, fix 3.14.3
+#  - cryptography 49.0.0: CVE-2026-69247, fix 50.0.0
+# The aiohttp/cryptography CVEs are freshly-published 2026 advisories, pre-existing
+# on main (main last ran 2026-07-30) — the pip-audit gate went red fleet-wide, not
+# because of the coding-client bump in this PR.
+constraint-dependencies = [
+    "pyasn1>=0.6.5",
+    "aiohttp>=3.14.3",
+    "cryptography>=50.0.0",
+]
+
+[tool.uv.sources]
+coding-client = { git = "https://github.com/nonagenticai/coding-client", rev = "f7f25b4e81fe4390586108a7a731608dacf462fd" }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+    "pytest-asyncio>=0.24.0",
+    "pytest-cov>=6.0.0",
+    "pytest-timeout>=2.3.1",
+    "ruff==0.15.14",
+    "detect-secrets",
+    "pip-audit>=2.10.0",
+    "ty==0.0.39",
+    # PYSEC-2026-3721: pip 26.1.2 is vulnerable (transitive via pip-audit -> pip-api -> pip); explicit floor so a re-lock cannot regress
+    "pip>=26.2",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP"]
+ignore = ["E501"]
+
+[tool.ty.environment]
+python-version = "3.14"
+
+[tool.ty.rules]
+unresolved-import = "ignore"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+pythonpath = ["src"]
+testpaths = ["tests"]
+timeout = 300
+timeout_method = "thread"
+# The DB-backed queue/worker tests connect via DATABASE_URL. CI provisions a
+# migrated Postgres for the main test step (has_postgres + alembic), so the
+# whole suite runs there and counts toward coverage. Locally, point
+# DATABASE_URL at a throwaway pg18 (see README).
+addopts = "-v --cov=src --cov-report=term-missing --cov-fail-under=80"
+markers = [
+    "db: marks tests that require a live Postgres via DATABASE_URL",
+]
+
+[tool.coverage.run]
+source = ["src"]
+concurrency = ["greenlet", "thread"]
+
+[tool.coverage.report]
+fail_under = 80

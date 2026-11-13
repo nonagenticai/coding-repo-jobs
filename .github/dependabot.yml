@@ -1,0 +1,15 @@
+version: 2
+
+# Dependabot replaces the org's private Renovate preset: a public repository cannot inherit a
+# preset hosted in a private one.
+updates:
+  - package-ecosystem: uv
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 2
