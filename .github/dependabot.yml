@@ -8,6 +8,10 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 3
+    groups:
+      minor-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
     ignore:
       - dependency-name: ty
   - package-ecosystem: github-actions
@@ -15,3 +19,7 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 2
+    groups:
+      minor-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
