@@ -35,7 +35,7 @@ dev = [
     "pytest>=9.0.2",
     "pytest-asyncio>=0.24.0",
     "pytest-cov>=6.0.0",
-    "ruff==0.15.14",
+    "ruff==0.17.4",
     "ty==0.0.39",
 ]
 
@@ -70,7 +70,7 @@ dev = [
     "pytest-asyncio>=0.24.0",
     "pytest-cov>=6.0.0",
     "pytest-timeout>=2.3.1",
-    "ruff==0.15.14",
+    "ruff==0.17.4",
     "detect-secrets",
     "pip-audit>=2.10.0",
     "ty==0.0.39",
