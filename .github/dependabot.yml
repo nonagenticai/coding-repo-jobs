@@ -8,6 +8,8 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 3
+    ignore:
+      - dependency-name: ty
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
