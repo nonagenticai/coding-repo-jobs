@@ -80,6 +80,20 @@ Issues and pull requests are welcome. See
 organisation-wide rules; setup, test and lint commands are in this README. Commits carry DCO
 sign-off.
 
+## Licensing
+
+The code in this repository is Apache-2.0 and needs no licence key to build, test or run.
+Licence tokens are an **optional** identity source: with `LICENSE_INTROSPECT_URL` unset (the
+default), a `Bearer` licence cannot be introspected, and callers authenticate through the
+platform's mesh-forwarded identity instead. With the URL set, every licence token is
+introspected against the licences service, and an unreachable service yields no identity
+(401) — never an admission.
+
+The licensing stack is public too — [`licenses`](https://github.com/nonagenticai/licenses)
+(entitlements, plans and tokens) and
+[`license-authz`](https://github.com/nonagenticai/license-authz) (the Envoy `ext_authz`
+enforcement point). Neither is required to run this code.
+
 ## License
 
 Apache-2.0 — see [`LICENSE`](LICENSE) and [`NOTICE`](NOTICE).

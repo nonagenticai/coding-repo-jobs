@@ -90,7 +90,7 @@ ignore = ["E501"]
 python-version = "3.14"
 
 [tool.ty.rules]
-unresolved-import = "ignore"
+import-not-found = "ignore"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
